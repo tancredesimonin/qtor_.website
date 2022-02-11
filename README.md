@@ -10,7 +10,10 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - Hot Visualization of your Tailwind Config with [Tailwind Config Viewer](https://github.com/rogden/tailwind-config-viewer)
 
 
+## First setup
 
+- Check the supported locales in next.config.js
+- 
 ## Getting Started
 
 First, run the development server:
