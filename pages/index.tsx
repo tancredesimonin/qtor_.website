@@ -1,11 +1,65 @@
-import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
+import Terminal, { Command } from "components/terminal/command";
+import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import LayoutDefault from "../components/layout/default";
-import { PageHomeAttributes, PageHomeResponse } from "../lib/api/api";
-import { fetchAPI } from "../lib/api/client";
+import { useState } from "react";
+import LayoutDefault from "components/layout/default";
+import { PageHomeAttributes, PageHomeResponse } from "lib/api/api";
+import { fetchAPI } from "lib/api/client";
+import { CSSTransition } from "react-transition-group";
+import HeaderDefault from "components/header/default";
+
+const ANIMATION_TIME_MS = 300;
 
 function Home({ page }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const firstCommands: Array<Command> = [
+    {
+      text: "> Qtor load website",
+      loadingTime: ANIMATION_TIME_MS,
+    },
+    {
+      text: "> installing components...",
+      loadingTime: ANIMATION_TIME_MS,
+    },
+    {
+      text: "> start security check...",
+      loadingTime: ANIMATION_TIME_MS,
+    },
+    {
+      text: "> downloading assets...",
+      loadingTime: ANIMATION_TIME_MS,
+    },
+    {
+      text: "> analyzing assets...",
+      loadingTime: ANIMATION_TIME_MS,
+    },
+    {
+      text: "> compiling client...",
+      loadingTime: ANIMATION_TIME_MS,
+    },
+    {
+      text: "✔ analyze complete",
+      loadingTime: ANIMATION_TIME_MS,
+    },
+    {
+      text: "✔ compilation complete",
+      loadingTime: ANIMATION_TIME_MS,
+    },
+    {
+      text: "✔ installation complete",
+      loadingTime: ANIMATION_TIME_MS,
+    },
+  ];
+  // const secondCommands: Array<Command> = [
+  //   {
+  //     text: '✔ installation complete',
+  //     loadingTime: 1000,
+  //   },
+  // ]
+  // const [step, setStep] = useState(1);
+  const [displayHeader, setDisplayHeader] = useState(false);
+  const [displayTerminal, setDisplayTerminal] = useState(true);
+
   return (
     <div>
       <Head>
@@ -15,11 +69,42 @@ function Home({ page }: InferGetStaticPropsType<typeof getStaticProps>) {
       </Head>
 
       <LayoutDefault>
-        <h1 className="block text-indigo-600 xl:inline">{page.h1}</h1>
+
+            {displayTerminal && (
+                      <div className="py-10">
+                      <div className="px-4 mx-auto space-y-6 max-w-7xl sm:px-6 lg:px-8">
+              <Terminal
+                id={"step1"}
+                commandList={firstCommands}
+                onCompletion={() => {
+                  // setStep(2);
+                  setDisplayHeader(true);
+                }}
+              ></Terminal>
+              </div>
+              </div>
+            )}
+            <CSSTransition
+              in={displayHeader}
+              timeout={500}
+              classNames="fade"
+              unmountOnExit
+              onEnter={() => setDisplayTerminal(false)}
+              onExited={() => setDisplayTerminal(true)}
+            >
+              <>
+                <HeaderDefault></HeaderDefault>
+                <h1 className="block text-indigo-600 xl:inline test">
+                  {page.h1}
+                </h1>
+              </>
+            </CSSTransition>
+            {/* {step > 1 && <Terminal id={'step2'} commandList={secondCommands} onCompletion={()=> {setDisplayHeader(true)}}></Terminal>} */}
+
       </LayoutDefault>
 
       <footer>
-        <a
+        {/* <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
           target="_blank"
           rel="noopener noreferrer"
@@ -28,7 +113,7 @@ function Home({ page }: InferGetStaticPropsType<typeof getStaticProps>) {
           <span>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
-        </a>
+        </a> */}
       </footer>
     </div>
   );

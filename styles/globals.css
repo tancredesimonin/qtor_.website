@@ -4,7 +4,39 @@
 @tailwind components;
 @tailwind utilities;
 
-/* terminal-like cursor blinking */
+/* fix typed.js bugs */
 .typed-cursor {
   @apply text-white font-bold inline-block;
+}
+
+/* terminal-like cursor blinking */
+.blink {
+        animation: blink-animation 1.5s steps(5, start) infinite;
+        -webkit-animation: blink-animation 1.5s steps(5, start) infinite;
+      }
+      @keyframes blink-animation {
+        to {
+          visibility: hidden;
+        }
+      }
+      @-webkit-keyframes blink-animation {
+        to {
+          visibility: hidden;
+        }
+      }
+
+
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms;
+}
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms;
 }

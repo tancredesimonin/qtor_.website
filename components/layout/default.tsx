@@ -1,5 +1,3 @@
-import HeaderDefault from "../header/default";
-
 export declare interface LayoutProps {
     children: React.ReactNode;
     // pageProperties?: PageProperties;
@@ -8,7 +6,6 @@ export declare interface LayoutProps {
 export default function LayoutDefault({ children }: LayoutProps) {
     return (
         <>
-        <HeaderDefault></HeaderDefault>
         <main>
             {children}
         </main>

@@ -3,8 +3,6 @@ import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import { classNames } from 'lib/style/styles'
-import Terminal, { Command } from 'components/terminal/command'
-import { useState } from 'react'
 
 const user = {
   name: 'Tom Cook',
@@ -24,63 +22,14 @@ const userNavigation = [
   { name: 'Settings', href: '#' },
   { name: 'Sign out', href: '#' },
 ]
+interface HeaderDefaultProps {
+}
+export default function HeaderDefault({}: HeaderDefaultProps) {
 
-export default function HeaderDefault() {
-  const firstCommands: Array<Command> = [
-    {
-      text: '> Qtor load website',
-      loadingTime: 500,
-    },
-    {
-      text: '> installing components...',
-      loadingTime: 500,
-    },
-    {
-      text: '> start security check...',
-      loadingTime: 500,
-    },
-    {
-      text: '> downloading assets...',
-      loadingTime: 500,
-    },
-    {
-      text: '> analyzing assets...',
-      loadingTime: 500,
-    },
-    {
-      text: '> compiling client...',
-      loadingTime: 500,
-    },
-    {
-      text: '✔ analyze complete',
-      loadingTime: 500,
-    },
-    {
-      text: '✔ compilation complete',
-      loadingTime: 500,
-    },
-    {
-      text: '✔ installation complete',
-      loadingTime: 500,
-    },
-  ]
-  const secondCommands: Array<Command> = [
-    {
-      text: '✔ installation complete',
-      loadingTime: 1000,
-    },
-  ]
-  const [step, setStep] = useState(1)
   return (
     <>
       <div className="min-h-full">
         <div className="bg-gray-900">
-        <div className="py-10">
-            <div className="px-4 mx-auto space-y-6 max-w-7xl sm:px-6 lg:px-8">
-              <Terminal id={'step1'} commandList={firstCommands} onCompletion={()=> {setStep(2)}}></Terminal>
-              {step > 1 && <Terminal id={'step2'} commandList={secondCommands} onCompletion={()=> {setStep(3)}}></Terminal>}
-            </div>
-          </div>
           <Disclosure as="nav" className="bg-gray-800">
             {({ open }) => (
               <>
@@ -89,11 +38,7 @@ export default function HeaderDefault() {
                     <div className="flex items-center justify-between h-16 px-4 sm:px-0">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
-                          <img
-                            className="w-8 h-8"
-                            src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                            alt="Workflow"
-                          />
+                          <span className='text-2xl font-bold text-white'>Qtor<span className='blink'>_</span></span>
                         </div>
                         <div className="hidden md:block">
                           <div className="flex items-baseline ml-10 space-x-4">
