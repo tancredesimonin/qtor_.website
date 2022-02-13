@@ -1,9 +1,9 @@
-import type { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import { PageHomeAttributes, PageHomeResponse } from '../lib/api/api'
-import { fetchAPI } from '../lib/api/client'
-
+import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import LayoutDefault from "../components/layout/default";
+import { PageHomeAttributes, PageHomeResponse } from "../lib/api/api";
+import { fetchAPI } from "../lib/api/client";
 
 function Home({ page }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
@@ -14,11 +14,9 @@ function Home({ page }: InferGetStaticPropsType<typeof getStaticProps>) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1 className="block text-indigo-600 xl:inline">
-          {page.h1}
-        </h1>
-      </main>
+      <LayoutDefault>
+        <h1 className="block text-indigo-600 xl:inline">{page.h1}</h1>
+      </LayoutDefault>
 
       <footer>
         <a
@@ -26,26 +24,28 @@ function Home({ page }: InferGetStaticPropsType<typeof getStaticProps>) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
-          <span >
+          Powered by{" "}
+          <span>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
     </div>
-  )
+  );
 }
 
-export const getStaticProps: GetStaticProps<{page: PageHomeAttributes}> = async (context) => {
-  console.log(context)
+export const getStaticProps: GetStaticProps<{
+  page: PageHomeAttributes;
+}> = async (context) => {
+  console.log(context);
   const { locale } = context;
-  const pageData: PageHomeResponse = await fetchAPI('/page-home',{ locale })
+  const pageData: PageHomeResponse = await fetchAPI("/page-home", { locale });
 
   return {
     props: {
-      page: pageData.data.attributes
-    }
-  }
-}
+      page: pageData.data.attributes,
+    },
+  };
+};
 
-export default Home
+export default Home;

@@ -42,7 +42,9 @@ npm run view
 Open http://localhost:3001 if 3000 is already being used 😉
 
 
+### Dependencies
 
+- animation with https://github.com/mattboldt/typed.js/
 
 
 ## Learn More
