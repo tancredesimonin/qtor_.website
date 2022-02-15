@@ -62,16 +62,18 @@ function Home({
       loadingTime: ANIMATION_TIME_MS,
     },
   ];
-  const [displayTerminal, setDisplayTerminal] = useState(true);
-  const [displayLocaleSelect, setDisplayLocaleSelect] = useState(false);
-  const [displayLocaleTerminal, setDisplayLocaleTerminal] = useState(false);
-  const [selectedLocale, setSelectedLocale] = useState(getLocaleDetails(page.locale));
-  const [displayPageContent, setDisplayPageContent] = useState(false);
-
   const router = useRouter();
+  /** send to page with ?play=false to disable terminal effect */
+  const { play } = router.query;
+  const [displayTerminal, setDisplayTerminal] = useState(!Boolean(play));
+  const [displayLocaleSelect, setDisplayLocaleSelect] = useState(Boolean(play));
+  const [displayLocaleTerminal, setDisplayLocaleTerminal] = useState(Boolean(play));
+  const [displayPageContent, setDisplayPageContent] = useState(Boolean(play));
+  const [selectedLocale, setSelectedLocale] = useState(getLocaleDetails(page.locale));
+
 
   return (
-    <div>
+    <>
       {displayTerminal && (
         <LayoutDefault>
           <Terminal
@@ -148,7 +150,7 @@ function Home({
         }}
       >
         <>
-          <HeaderDefault></HeaderDefault>
+          <HeaderDefault page={page}></HeaderDefault>
           <PageLayout h1={page.h1}>
             <BlockRenderer blocks={page.blocks}/>
           </PageLayout>
@@ -156,7 +158,7 @@ function Home({
       </CSSTransition>
       <footer>
       </footer>
-    </div>
+    </>
   );
 }
 

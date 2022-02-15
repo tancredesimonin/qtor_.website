@@ -1,72 +1,75 @@
-import { Disclosure } from '@headlessui/react'
-import { MenuIcon, XIcon } from '@heroicons/react/outline'
-import { classNames } from 'lib/style/styles'
-
+import { Disclosure } from "@headlessui/react";
+import { MenuIcon, TranslateIcon, XIcon } from "@heroicons/react/outline";
+import { PageSharedAttributes } from "lib/api/api";
+import { getOtherLocaleDetails } from "lib/i18n";
+import { capitalize, classNames } from "lib/style/styles";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const navigation = [
-  { name: 'Home', href: '#', current: true },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Music', href: '#', current: false },
-  { name: 'Tour', href: '#', current: false },
-]
-const secondNavigation = [
-  { name: 'root access', href: '#', current: false },
-]
+  { name: "Manifesto", path: "/", current: true },
+  { name: "Bio", path: "/bio", current: false },
+];
 interface HeaderDefaultProps {
+  page: PageSharedAttributes;
 }
-export default function HeaderDefault({}: HeaderDefaultProps) {
-
+export default function HeaderDefault({ page }: HeaderDefaultProps) {
+  const router = useRouter();
   return (
-      <header className="min-h-full">
-        <div className="bg-gray-900">
-          <Disclosure as="nav" className="bg-gray-900">
-            {({ open }) => (
-              <>
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                  <div className="border-b-2 border-gray-700">
-                    <div className="flex items-center justify-between h-16 px-4 sm:px-0">
-                      <div className="flex items-center">
-                        <div className="flex-shrink-0">
-                          <span className='text-2xl font-bold text-white'>Qtor<span className='blink'>_</span></span>
-                        </div>
-                        <div className="hidden md:block">
-                          <div className="flex items-baseline ml-10 space-x-4">
-                            {navigation.map((item) => (
-                              <a
-                                key={item.name}
-                                href={item.href}
-                                className={classNames(
-                                  item.current
-                                    ? 'bg-gray-800 text-white'
-                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                                  'px-3 py-2 rounded-md text-sm font-medium'
-                                )}
-                                aria-current={item.current ? 'page' : undefined}
-                              >
-                                {item.name}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
+    <header className="min-h-full">
+      <div className="bg-gray-900">
+        <Disclosure as="nav" className="bg-gray-900">
+          {({ open }) => (
+            <>
+              <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div className="border-b-2 border-gray-700">
+                  <div className="flex items-center justify-between h-16 px-4 sm:px-0">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0">
+                        <span className="text-2xl font-bold text-white">
+                          Qtor<span className="blink">_</span>
+                        </span>
                       </div>
                       <div className="hidden md:block">
-                        <div className="flex items-center ml-4 md:ml-6">
-                        {secondNavigation.map((item) => (
+                        <div className="flex items-baseline ml-10 space-x-4">
+                          {navigation.map((item) => (
+                            <Link
+                              key={item.name}
+                              href={{pathname: item.path, query: item.path === '/' ? { play: false} : null }}
+                              locale={page.locale}
+                            >
                               <a
-                                key={item.name}
-                                href={item.href}
                                 className={classNames(
-                                  item.current
-                                    ? 'bg-gray-900 text-white'
-                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                                  'px-3 py-2 rounded-md text-sm font-medium'
+                                  router.pathname === item.path
+                                    ? "bg-gray-800 text-white"
+                                    : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                                  "px-3 py-2 rounded-md text-sm font-medium"
                                 )}
-                                aria-current={item.current ? 'page' : undefined}
+                                aria-current={
+                                  router.pathname === item.path
+                                    ? "page"
+                                    : undefined
+                                }
                               >
                                 {item.name}
                               </a>
-                            ))}
-                          {/* <button
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="hidden md:block">
+                      <div className="flex items-center ml-4 md:ml-6">
+                        <Link
+                          href={router.pathname}
+                          locale={getOtherLocaleDetails(page.locale).shortCode}
+                        >
+                          <a className="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">
+                            {capitalize(getOtherLocaleDetails(page.locale).localizedLabel)}
+                          </a>
+                        </Link>
+
+                        {/* <button
                             type="button"
                             className="p-1 text-gray-400 bg-gray-800 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                           >
@@ -74,8 +77,8 @@ export default function HeaderDefault({}: HeaderDefaultProps) {
                             <BellIcon className="w-6 h-6" aria-hidden="true" />
                           </button> */}
 
-                          {/* Profile dropdown */}
-                          {/* <Menu as="div" className="relative ml-3">
+                        {/* Profile dropdown */}
+                        {/* <Menu as="div" className="relative ml-3">
                             <div>
                               <Menu.Button className="flex items-center max-w-xs text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                                 <span className="sr-only">Open user menu</span>
@@ -110,42 +113,55 @@ export default function HeaderDefault({}: HeaderDefaultProps) {
                               </Menu.Items>
                             </Transition>
                           </Menu> */}
-                        </div>
                       </div>
-                      <div className="flex -mr-2 md:hidden">
-                        {/* Mobile menu button */}
-                        <Disclosure.Button className="inline-flex items-center justify-center p-2 text-gray-400 bg-gray-800 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                          <span className="sr-only">Open main menu</span>
-                          {open ? (
-                            <XIcon className="block w-6 h-6" aria-hidden="true" />
-                          ) : (
-                            <MenuIcon className="block w-6 h-6" aria-hidden="true" />
-                          )}
-                        </Disclosure.Button>
-                      </div>
+                    </div>
+                    <div className="flex -mr-2 md:hidden">
+                      {/* Mobile menu button */}
+                      <Disclosure.Button className="inline-flex items-center justify-center p-2 text-gray-400 bg-gray-800 rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                        <span className="sr-only">Open main menu</span>
+                        {open ? (
+                          <XIcon className="block w-6 h-6" aria-hidden="true" />
+                        ) : (
+                          <MenuIcon
+                            className="block w-6 h-6"
+                            aria-hidden="true"
+                          />
+                        )}
+                      </Disclosure.Button>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                <Disclosure.Panel className="border-b border-gray-700 md:hidden">
-                  <div className="px-2 py-3 space-y-1 sm:px-3">
-                    {navigation.map((item) => (
+              <Disclosure.Panel className="border-b border-gray-700 md:hidden">
+                <div className="px-2 py-3 space-y-1 sm:px-3">
+                  {navigation.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={{pathname: item.path, query: item.path === '/' ? { play: false} : null }}
+                      locale={page.locale}
+                      passHref
+                    >
                       <Disclosure.Button
                         key={item.name}
                         as="a"
-                        href={item.href}
                         className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'block px-3 py-2 rounded-md text-base font-medium'
+                          router.pathname === item.path
+                            ? "bg-gray-800 text-white"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                          "px-3 py-2 rounded-md text-sm font-medium block"
                         )}
-                        aria-current={item.current ? 'page' : undefined}
+                        aria-current={
+                          router.pathname === item.path ? "page" : undefined
+                        }
                       >
                         {item.name}
                       </Disclosure.Button>
-                    ))}
-                  </div>
-                  <div className="pt-4 pb-3 border-t border-gray-700">
-                    {/* <div className="flex items-center px-5">
+                    </Link>
+                  ))}
+                </div>
+                <div className="pt-4 pb-3 border-t border-gray-700">
+                  {/* <div className="flex items-center px-5">
                       <div className="flex-shrink-0">
                         <img className="w-10 h-10 rounded-full" src={user.imageUrl} alt="" />
                       </div>
@@ -161,24 +177,26 @@ export default function HeaderDefault({}: HeaderDefaultProps) {
                         <BellIcon className="w-6 h-6" aria-hidden="true" />
                       </button>
                     </div> */}
-                    <div className="px-2 mt-3 space-y-1">
-                      {secondNavigation.map((item) => (
-                        <Disclosure.Button
-                          key={item.name}
-                          as="a"
-                          href={item.href}
-                          className="block px-3 py-2 text-base font-medium text-gray-400 rounded-md hover:text-white hover:bg-gray-700"
-                        >
-                          {item.name}
-                        </Disclosure.Button>
-                      ))}
-                    </div>
+                  <div className="px-2 mt-3 space-y-1">
+                    <Link
+                      href={router.pathname}
+                      locale={getOtherLocaleDetails(page.locale).shortCode}
+                      passHref
+                    >
+                      <Disclosure.Button
+                        as="a"
+                        className="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white"
+                      >
+                        {capitalize(getOtherLocaleDetails(page.locale).localizedLabel)}
+                      </Disclosure.Button>
+                    </Link>
                   </div>
-                </Disclosure.Panel>
-              </>
-            )}
-          </Disclosure>
-        </div>
-      </header>
-  )
+                </div>
+              </Disclosure.Panel>
+            </>
+          )}
+        </Disclosure>
+      </div>
+    </header>
+  );
 }

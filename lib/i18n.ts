@@ -13,4 +13,11 @@ export function getLocaleDetails(localeCode: string) : LocaleDetail {
     else {
       return {shortCode: 'en', code: 'en-US', label: 'english', localizedLabel: 'english'}
     }
+}
+
+export function getOtherLocaleDetails(localeCode: string) : LocaleDetail {
+  if (localeCode === 'en') {
+    return getLocaleDetails('fr')
   }
+  else return getLocaleDetails('en')
+}

@@ -7,7 +7,7 @@ interface SeoProps {
     global: GlobalAttributes;
 }
 function Seo({page, global}: SeoProps) {
-    if (page.seo.noIndex === true) {
+    if (page.seo?.noIndex === true) {
         return (
             <NextSeo
             title={page.seo.metaTitle}

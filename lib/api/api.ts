@@ -42,6 +42,10 @@ export interface PageHomeAttributes extends PageSharedAttributes {
   h1: string;
 }
 
+export interface PageBioAttributes extends PageSharedAttributes {
+  h1: string;
+}
+
 export interface Page404Attributes extends PageSharedAttributes {
   h1: string;
   message: string;
@@ -67,7 +71,7 @@ export interface SeoAttributes {
   metaImage?: {
     data?: MediaDataAttributes;
   }
-  noIndex: boolean;
+  noIndex?: boolean;
 }
 
 
