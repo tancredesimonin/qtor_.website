@@ -1,40 +1,29 @@
-/* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
+import { Disclosure } from '@headlessui/react'
+import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { classNames } from 'lib/style/styles'
 
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-}
+
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
+  { name: 'Home', href: '#', current: true },
   { name: 'Projects', href: '#', current: false },
-  { name: 'Calendar', href: '#', current: false },
-  { name: 'Reports', href: '#', current: false },
+  { name: 'Music', href: '#', current: false },
+  { name: 'Tour', href: '#', current: false },
 ]
-const userNavigation = [
-  { name: 'Your Profile', href: '#' },
-  { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+const secondNavigation = [
+  { name: 'root access', href: '#', current: false },
 ]
 interface HeaderDefaultProps {
 }
 export default function HeaderDefault({}: HeaderDefaultProps) {
 
   return (
-    <>
-      <div className="min-h-full">
+      <header className="min-h-full">
         <div className="bg-gray-900">
           <Disclosure as="nav" className="bg-gray-800">
             {({ open }) => (
               <>
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                  <div className="border-b border-gray-700">
+                  <div className="border-b border-gray-800">
                     <div className="flex items-center justify-between h-16 px-4 sm:px-0">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
@@ -62,16 +51,31 @@ export default function HeaderDefault({}: HeaderDefaultProps) {
                       </div>
                       <div className="hidden md:block">
                         <div className="flex items-center ml-4 md:ml-6">
-                          <button
+                        {secondNavigation.map((item) => (
+                              <a
+                                key={item.name}
+                                href={item.href}
+                                className={classNames(
+                                  item.current
+                                    ? 'bg-gray-900 text-white'
+                                    : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                  'px-3 py-2 rounded-md text-sm font-medium'
+                                )}
+                                aria-current={item.current ? 'page' : undefined}
+                              >
+                                {item.name}
+                              </a>
+                            ))}
+                          {/* <button
                             type="button"
                             className="p-1 text-gray-400 bg-gray-800 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                           >
                             <span className="sr-only">View notifications</span>
                             <BellIcon className="w-6 h-6" aria-hidden="true" />
-                          </button>
+                          </button> */}
 
                           {/* Profile dropdown */}
-                          <Menu as="div" className="relative ml-3">
+                          {/* <Menu as="div" className="relative ml-3">
                             <div>
                               <Menu.Button className="flex items-center max-w-xs text-sm bg-gray-800 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                                 <span className="sr-only">Open user menu</span>
@@ -105,7 +109,7 @@ export default function HeaderDefault({}: HeaderDefaultProps) {
                                 ))}
                               </Menu.Items>
                             </Transition>
-                          </Menu>
+                          </Menu> */}
                         </div>
                       </div>
                       <div className="flex -mr-2 md:hidden">
@@ -141,7 +145,7 @@ export default function HeaderDefault({}: HeaderDefaultProps) {
                     ))}
                   </div>
                   <div className="pt-4 pb-3 border-t border-gray-700">
-                    <div className="flex items-center px-5">
+                    {/* <div className="flex items-center px-5">
                       <div className="flex-shrink-0">
                         <img className="w-10 h-10 rounded-full" src={user.imageUrl} alt="" />
                       </div>
@@ -156,9 +160,9 @@ export default function HeaderDefault({}: HeaderDefaultProps) {
                         <span className="sr-only">View notifications</span>
                         <BellIcon className="w-6 h-6" aria-hidden="true" />
                       </button>
-                    </div>
+                    </div> */}
                     <div className="px-2 mt-3 space-y-1">
-                      {userNavigation.map((item) => (
+                      {secondNavigation.map((item) => (
                         <Disclosure.Button
                           key={item.name}
                           as="a"
@@ -174,13 +178,7 @@ export default function HeaderDefault({}: HeaderDefaultProps) {
               </>
             )}
           </Disclosure>
-          <header className="py-10">
-            <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-              <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-            </div>
-          </header>
         </div>
-      </div>
-    </>
+      </header>
   )
 }
