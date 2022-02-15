@@ -32,6 +32,7 @@ export interface PageResponse<T> {
 export interface PageSharedAttributes {
   locale: string;
   seo: SeoAttributes;
+  blocks?: Array<BlockParagraphAttributes>
 }
 
 /**
@@ -81,10 +82,10 @@ export interface BlockBaseAttributes {
   id: string;
 }
 
-export interface BlockParagraph extends BlockBaseAttributes {
+export interface BlockParagraphAttributes extends BlockBaseAttributes {
   __component?: 'blocks.paragraph';
   title?: string;
-  body?: string;
+  body: string;
 }
 
 

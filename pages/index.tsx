@@ -8,6 +8,8 @@ import { CSSTransition } from "react-transition-group";
 import HeaderDefault from "components/header/default";
 import { useRouter } from "next/router";
 import { getLocaleDetails } from "lib/i18n";
+import BlockRenderer from "components/blocks/renderer";
+import PageLayout from "components/layout/pageLayout";
 
 const ANIMATION_TIME_MS = 50;
 
@@ -147,9 +149,9 @@ function Home({
       >
         <>
           <HeaderDefault></HeaderDefault>
-          <LayoutDefault>
-            <h1 className="block text-indigo-600 xl:inline test">{page.h1}</h1>
-          </LayoutDefault>
+          <PageLayout h1={page.h1}>
+            <BlockRenderer blocks={page.blocks}/>
+          </PageLayout>
         </>
       </CSSTransition>
       <footer>
@@ -162,8 +164,8 @@ export const getStaticProps: GetStaticProps<{
   page: PageHomeAttributes;
 }> = async (context) => {
   const { locale } = context;
-  const pageData: PageResponse<PageHomeAttributes> = await fetchAPI("/page-home", { locale, populate: ['*','seo.metaImage', 'seo.metaSocial'] });
-
+  const pageData: PageResponse<PageHomeAttributes> = await fetchAPI("/page-home", { locale, populate: ['blocks','seo.metaImage', 'seo.metaSocial'] });
+  console.log(pageData.data.attributes.blocks)
   return {
     props: {
       page: pageData.data.attributes,

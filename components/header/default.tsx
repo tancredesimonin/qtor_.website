@@ -19,11 +19,11 @@ export default function HeaderDefault({}: HeaderDefaultProps) {
   return (
       <header className="min-h-full">
         <div className="bg-gray-900">
-          <Disclosure as="nav" className="bg-gray-800">
+          <Disclosure as="nav" className="bg-gray-900">
             {({ open }) => (
               <>
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                  <div className="border-b border-gray-800">
+                  <div className="border-b-2 border-gray-700">
                     <div className="flex items-center justify-between h-16 px-4 sm:px-0">
                       <div className="flex items-center">
                         <div className="flex-shrink-0">
@@ -37,7 +37,7 @@ export default function HeaderDefault({}: HeaderDefaultProps) {
                                 href={item.href}
                                 className={classNames(
                                   item.current
-                                    ? 'bg-gray-900 text-white'
+                                    ? 'bg-gray-800 text-white'
                                     : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                                   'px-3 py-2 rounded-md text-sm font-medium'
                                 )}
