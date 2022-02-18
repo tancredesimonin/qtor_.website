@@ -1,6 +1,6 @@
 import { Disclosure } from "@headlessui/react";
-import { MenuIcon, TranslateIcon, XIcon } from "@heroicons/react/outline";
-import { PageSharedAttributes } from "lib/api/api";
+import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import { PageSharedAttributes, SettingsI18nAttributes } from "lib/api/api";
 import { getOtherLocaleDetails } from "lib/i18n";
 import { capitalize, classNames } from "lib/style/styles";
 import Link from "next/link";
@@ -12,8 +12,10 @@ const navigation = [
 ];
 interface HeaderDefaultProps {
   page: PageSharedAttributes;
+  locales?: Array<SettingsI18nAttributes>;
 }
-export default function HeaderDefault({ page }: HeaderDefaultProps) {
+
+export default function HeaderDefault({ page, locales }: HeaderDefaultProps) {
   const router = useRouter();
   return (
     <header className="min-h-full">
@@ -61,7 +63,7 @@ export default function HeaderDefault({ page }: HeaderDefaultProps) {
                     <div className="hidden md:block">
                       <div className="flex items-center ml-4 md:ml-6">
                         <Link
-                          href={router.pathname}
+                          href={page.slug ? { href: router.pathname, query: { slug: page.localizations.data[0].attributes.slug } } : { href: router.pathname }}
                           locale={getOtherLocaleDetails(page.locale).shortCode}
                         >
                           <a className="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">
@@ -179,7 +181,7 @@ export default function HeaderDefault({ page }: HeaderDefaultProps) {
                     </div> */}
                   <div className="px-2 mt-3 space-y-1">
                     <Link
-                      href={router.pathname}
+                      href={page.slug ? { href: router.pathname, query: { slug: page.localizations.data[0].attributes.slug } } : { href: router.pathname }}
                       locale={getOtherLocaleDetails(page.locale).shortCode}
                       passHref
                     >

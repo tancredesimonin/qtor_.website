@@ -1,14 +1,20 @@
+import HeaderDefault from "components/header/default";
 import LayoutDefault from "components/layout/default";
-import { Page500Attributes, PageResponse } from "lib/api/api";
+import SinglePageSeo from "components/seo/singlePage";
+import { GlobalAttributes, Page500Attributes, SinglePageResponse, SingleType } from "lib/api/api";
 import { fetchAPI } from "lib/api/client";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 
-function Page500({page}: InferGetStaticPropsType<typeof getStaticProps>) {
+function Page500({ page, global }: InferGetStaticPropsType<typeof getStaticProps>) {
     return (
+      <>    
+        <SinglePageSeo page={page} global={global}/>
+        <HeaderDefault page={page}/>
         <LayoutDefault>
             <h1 className="text-xl text-white">{page.h1}</h1>
             <h3 className="text-gray-400">{page.message}</h3>
         </LayoutDefault>
+        </>
     )
   }
 
@@ -16,14 +22,19 @@ function Page500({page}: InferGetStaticPropsType<typeof getStaticProps>) {
 
   export const getStaticProps: GetStaticProps<{
     page: Page500Attributes;
+    global: GlobalAttributes;
   }> = async (context) => {
     const { locale } = context;
-    const pageData: PageResponse<Page500Attributes> = await fetchAPI("/page500", { locale, populate: ['*','seo.metaImage', 'seo.metaSocial'] });
+    const [ global, pageData ] = await Promise.all<[Promise<SingleType<GlobalAttributes>>, Promise<SinglePageResponse<Page500Attributes>> ]>([
+      fetchAPI("/global", { locale, populate: ['*', 'seo.metaImage', 'seo.metaSocial'] }),
+      fetchAPI("/page500", { locale, populate: ['*','seo.metaImage', 'seo.metaSocial'] })
+    ])
   
     return {
       props: {
         page: pageData.data.attributes,
-        locale: locale,
+        global: global.data.attributes,
+        locale: locale
       },
     };
   };

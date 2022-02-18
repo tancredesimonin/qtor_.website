@@ -2,7 +2,7 @@ import Terminal, { Command } from "components/terminal/command";
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useState } from "react";
 import LayoutDefault from "components/layout/default";
-import { PageHomeAttributes, PageResponse } from "lib/api/api";
+import { GlobalAttributes, PageHomeAttributes, SinglePageResponse, SingleType } from "lib/api/api";
 import { fetchAPI } from "lib/api/client";
 import { CSSTransition } from "react-transition-group";
 import HeaderDefault from "components/header/default";
@@ -10,11 +10,13 @@ import { useRouter } from "next/router";
 import { getLocaleDetails } from "lib/i18n";
 import BlockRenderer from "components/blocks/renderer";
 import PageLayout from "components/layout/pageLayout";
+import SinglePageSeo from "components/seo/singlePage";
 
-const ANIMATION_TIME_MS = 50;
+const ANIMATION_TIME_MS = 100;
 
 function Home({
   page,
+  global
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const firstCommands: Array<Command> = [
     {
@@ -63,6 +65,7 @@ function Home({
     },
   ];
   const router = useRouter();
+
   /** send to page with ?play=false to disable terminal effect */
   const { play } = router.query;
   const [displayTerminal, setDisplayTerminal] = useState(!Boolean(play));
@@ -74,6 +77,7 @@ function Home({
 
   return (
     <>
+      <SinglePageSeo page={page} global={global}/>
       {displayTerminal && (
         <LayoutDefault>
           <Terminal
@@ -164,14 +168,18 @@ function Home({
 
 export const getStaticProps: GetStaticProps<{
   page: PageHomeAttributes;
+  global: GlobalAttributes;
 }> = async (context) => {
   const { locale } = context;
-  const pageData: PageResponse<PageHomeAttributes> = await fetchAPI("/page-home", { locale, populate: ['blocks','seo.metaImage', 'seo.metaSocial'] });
-  console.log(pageData.data.attributes.blocks)
+  const [ global, pageData ] = await Promise.all<[Promise<SingleType<GlobalAttributes>>, Promise<SinglePageResponse<PageHomeAttributes>> ]>([
+    fetchAPI("/global", { locale, populate: ['*', 'seo.metaImage', 'seo.metaSocial'] }),
+    fetchAPI("/page-home", { locale, populate: ['blocks','seo.metaImage', 'seo.metaSocial'] })
+  ])
   return {
     props: {
       page: pageData.data.attributes,
-      locale: locale,
+      global: global.data.attributes,
+      locale
     },
   };
 };

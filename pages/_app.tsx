@@ -1,23 +1,26 @@
-import '../styles/globals.css'
-import type { AppContext, AppProps } from 'next/app'
-import Seo from 'components/seo/default'
+import 'styles/globals.css'
+import type { AppContext, AppProps as NextAppProps } from "next/app";
 import App from 'next/app'
-import { GlobalAttributes, SingleType } from 'lib/api/api'
+import { GlobalAttributes, PageSharedAttributes, SingleType } from 'lib/api/api'
 import { fetchAPI } from 'lib/api/client'
-import { createContext } from 'react'
+import DefaultSeo from 'components/seo/default';
 
-export const GlobalContext = createContext({})
+type AppProps<P = any> = {
+  pageProps: P;
+} & Omit<NextAppProps<P>, "pageProps">;
 
+export interface PageProps {
+  global: GlobalAttributes;
+  page: PageSharedAttributes;
+  locale: string;
+}
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps<PageProps>) {
   const { global } = pageProps;
-
   return (
     <>
-      <Seo page={pageProps.page} global={pageProps.global}/>
-      <GlobalContext.Provider value={global}>
+       <DefaultSeo {...global}/>
         <Component {...pageProps} />
-      </GlobalContext.Provider>
     </>
   )
 }
@@ -31,9 +34,9 @@ MyApp.getInitialProps = async (context: AppContext) => {
   // Calls page's `getInitialProps` and fills `appProps.pageProps`
   const appProps = await App.getInitialProps(context)
   // Fetch global site settings from Strapi
-  const global: SingleType<GlobalAttributes> = await fetchAPI("/global", { locale, populate: ['*'] });
+  const globalResponse: SingleType<GlobalAttributes> = await fetchAPI("/global", { locale, populate: ['*', 'seo.metaImage', 'seo.metaSocial'] });
   // Pass the data to our page via props
-  return { ...appProps, pageProps: { global } }
+  return { ...appProps, pageProps: { global: globalResponse.data.attributes } }
 }
 
 export default MyApp
