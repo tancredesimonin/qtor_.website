@@ -1,3 +1,4 @@
+import BlockRenderer from "components/blocks/renderer";
 import HeaderDefault from "components/header/default";
 import PageLayout from "components/layout/pageLayout";
 import ProjectPageSeo from "components/seo/projects";
@@ -12,7 +13,7 @@ function PageProject({ page, global, locales }: InferGetStaticPropsType<typeof g
         <ProjectPageSeo page={page} global={global} locales={locales}/>
         <HeaderDefault page={page} locales={locales}></HeaderDefault>
         <PageLayout h1={page.name}>
-            <h3 className="text-gray-400"></h3>
+        <BlockRenderer blocks={page.blocks}/>
         </PageLayout>
       </>
 
@@ -55,7 +56,7 @@ function PageProject({ page, global, locales }: InferGetStaticPropsType<typeof g
     const [ locales, global, projectData ] = await Promise.all<[Promise<Array<SettingsI18nAttributes>>, Promise<SingleType<GlobalAttributes>>, Promise<CollectionListResponse<ProjectAttributes>> ]>([
       fetchAPI('/i18n/locales'),
       fetchAPI('/global', { locale, populate: ['*', 'seo.metaImage', 'seo.metaSocial'] }),
-      fetchAPI('/projects', { slug, locale, populate: ['*', 'seo.metaImage', 'seo.metaSocial', 'localizations'] })
+      fetchAPI('/projects', { slug, locale, populate: ['*', 'localizations', 'seo.metaImage', 'seo.metaSocial', 'blocks.track.file'] })
     ])
     return {
       props: {

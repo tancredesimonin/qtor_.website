@@ -1,19 +1,14 @@
 /* eslint-disable react/no-children-prop */
-import { BlockParagraphAttributes } from "lib/api/api";
-import ReactMarkdown from "react-markdown";
+import { BlockReleaseAttributes } from "lib/api/api";
 
-interface BlockParagraphProps {
-    block: BlockParagraphAttributes
-}
-
-export default function BlockParagraph( block: BlockParagraphAttributes) {
+export default function BlockRelease( block: BlockReleaseAttributes) {
   return (
     <div className="relative px-4 sm:px-6 lg:px-8">
       <div className="mx-auto text-lg max-w-prose">
-        <ReactMarkdown
+        {/* <ReactMarkdown
           children={block.body}
           className="mt-8 font-sans text-lg leading-8 text-gray-400"
-        />
+        /> */}
       </div>
     </div>
   );

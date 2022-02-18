@@ -40,14 +40,14 @@ export interface SinglePageResponse<T> {
 export interface SinglePageSharedAttributes {
   locale: string;
   seo: SeoAttributes;
-  blocks?: Array<BlockParagraphAttributes>;
+  blocks?: Array<Blocks>;
 }
 
 export interface DynamicPageSharedAttributes {
   locale: string;
   slug: string;
   seo?: SeoAttributes | null;
-  blocks?: Array<BlockParagraphAttributes | BlockReleaseAttributes>;
+  blocks?: Array<Blocks>;
   localizations: {
     data: Array<{
       id: number; 
@@ -91,6 +91,13 @@ export interface Page500Attributes extends SinglePageSharedAttributes {
  ***********************************/
 
  export interface CollectionGetResponse<T> {
+  data: {
+    id: number;
+    attributes: T;
+  }
+}
+
+export interface Relation<T> {
   data: {
     id: number;
     attributes: T;
@@ -176,11 +183,14 @@ export interface ArtistAttributes {
   release?: ReleaseAttributes;
   releasePosition?: number;
   cover?: {
-    data?: MediaDataAttributes;
+    data: MediaDataAttributes;
   };
   artist?: ArtistAttributes;
   genres?: Array<GenreAttributes>;
   contributors?: Array<ArtistAttributes>;
+  file?: {
+    data: MediaDataAttributes;
+  };
 }
 
 /***********************************
@@ -257,6 +267,13 @@ export interface BlockReleaseAttributes extends BlockBaseAttributes {
   title?: string;
   body: string;
 }
+
+export interface BlockTrackAttributes extends BlockBaseAttributes {
+  __component?: 'blocks.track';
+  track: Relation<TrackAttributes> ;
+}
+
+export type Blocks = BlockParagraphAttributes | BlockReleaseAttributes | BlockTrackAttributes;
 
 
 
