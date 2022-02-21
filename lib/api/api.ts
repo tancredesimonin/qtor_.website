@@ -104,6 +104,13 @@ export interface Relation<T> {
   }
 }
 
+export interface RelationMany<T> {
+  data: Array<{
+    id: number;
+    attributes: T;
+  }>
+}
+
 
 export interface CollectionListResponse<T> {
   data: Array<{id: number; attributes: T}>;
@@ -141,14 +148,12 @@ export interface ProjectAttributes extends DynamicPageSharedAttributes {
 export interface ReleaseAttributes {
   title: string;
   releaseDate: string;
-  cover?: {
-    data?: MediaDataAttributes;
-  };
-  tracks?: Array<TrackAttributes>;
-  recordType?: RecordTypeAttributes;
-  artist?: ArtistAttributes;
-  contributors?: Array<ArtistAttributes>;
-  label?: LabelAttributes;
+  cover?: Relation<MediaAttributes>;
+  tracks?: RelationMany<TrackAttributes>;
+  recordType?: Relation<RecordTypeAttributes>;
+  artist?: Relation<ArtistAttributes>;
+  contributors?: RelationMany<ArtistAttributes>;
+  label?: Relation<LabelAttributes>;
 }
 
 /***********************************
@@ -159,14 +164,12 @@ export interface ReleaseAttributes {
 
 export interface ArtistAttributes {
   name: string;
-  picture?: {
-    data?: MediaDataAttributes;
-  };
+  picture?: Relation<MediaAttributes>;
   description?: string;
-  tracks?: Array<TrackAttributes>;
-  releases?: Array<ReleaseAttributes>;
-  contributions?: Array<TrackAttributes>;
-  presence?: Array<ReleaseAttributes>;
+  tracks?: RelationMany<TrackAttributes>;
+  releases?: RelationMany<ReleaseAttributes>;
+  contributions?: RelationMany<TrackAttributes>;
+  presence?: RelationMany<ReleaseAttributes>;
 }
 
 /***********************************
@@ -180,17 +183,12 @@ export interface ArtistAttributes {
   releaseDate: string;
   bpm: number;
   duration: number;
-  release?: ReleaseAttributes;
+  release?: Relation<ReleaseAttributes>;
   releasePosition?: number;
-  cover?: {
-    data: MediaDataAttributes;
-  };
-  artist?: ArtistAttributes;
-  genres?: Array<GenreAttributes>;
-  contributors?: Array<ArtistAttributes>;
-  file?: {
-    data: MediaDataAttributes;
-  };
+  artist?: Relation<ArtistAttributes>;
+  genres?: RelationMany<GenreAttributes>;
+  contributors?: RelationMany<ArtistAttributes>;
+  file?: Relation<MediaAttributes>;
 }
 
 /***********************************
@@ -201,7 +199,7 @@ export interface ArtistAttributes {
 
 export interface GenreAttributes {
   name: string;
-  tracks?: Array<TrackAttributes>;
+  tracks?: RelationMany<TrackAttributes>;
 }
 
 /***********************************
@@ -222,7 +220,7 @@ export interface GenreAttributes {
  ***********************************/
 export interface LabelAttributes {
   name: string;
-  releases?: Array<ReleaseAttributes>;
+  releases?: RelationMany<ReleaseAttributes>;
 }
 
 /***********************************
@@ -237,9 +235,7 @@ export interface SeoAttributes {
   metaDescription: string;
   keywords: string;
   canonicalURL: string;
-  metaImage: {
-    data: MediaDataAttributes;
-  }
+  metaImage: Relation<MediaAttributes>;
   noIndex?: boolean;
 }
 
@@ -284,21 +280,23 @@ export type Blocks = BlockParagraphAttributes | BlockReleaseAttributes | BlockTr
  * 
  ***********************************/
 
- export interface MediaDataAttributes {
+ export interface MediaAttributes {
+  name: string;
+  alternativeText: string;
+  caption: string;
+  width: number;
+  height: number;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  // TODO implements formats
+}
+
+export interface MediaDataAttributes {
   id: number;
-  attributes: {
-    name: string;
-    alternativeText: string;
-    caption: string;
-    width: number;
-    height: number;
-    hash: string;
-    ext: string;
-    mime: string;
-    size: number;
-    url: string;
-    // TODO implements formats
-  }
+  attributes: MediaAttributes;
 }
 
 

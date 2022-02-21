@@ -56,7 +56,7 @@ function PageProject({ page, global, locales }: InferGetStaticPropsType<typeof g
     const [ locales, global, projectData ] = await Promise.all<[Promise<Array<SettingsI18nAttributes>>, Promise<SingleType<GlobalAttributes>>, Promise<CollectionListResponse<ProjectAttributes>> ]>([
       fetchAPI('/i18n/locales'),
       fetchAPI('/global', { locale, populate: ['*', 'seo.metaImage', 'seo.metaSocial'] }),
-      fetchAPI('/projects', { slug, locale, populate: ['*', 'localizations', 'seo.metaImage', 'seo.metaSocial', 'blocks.track.file'] })
+      fetchAPI('/projects', { slug, locale, populate: ['*', 'localizations', 'seo.metaImage', 'seo.metaSocial', 'blocks.track.file', 'blocks.track.release.cover', 'blocks.track.artist', 'blocks.track.genres' ] })
     ])
     return {
       props: {

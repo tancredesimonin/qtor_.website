@@ -4,6 +4,7 @@ import App from 'next/app'
 import { GlobalAttributes, PageSharedAttributes, SingleType } from 'lib/api/api'
 import { fetchAPI } from 'lib/api/client'
 import DefaultSeo from 'components/seo/default';
+import { ThemeProvider } from 'next-themes';
 
 type AppProps<P = any> = {
   pageProps: P;
@@ -19,8 +20,10 @@ function MyApp({ Component, pageProps }: AppProps<PageProps>) {
   const { global } = pageProps;
   return (
     <>
-       <DefaultSeo {...global}/>
+      <ThemeProvider attribute="class" forcedTheme="dark">
+        <DefaultSeo {...global}/>
         <Component {...pageProps} />
+      </ThemeProvider>
     </>
   )
 }

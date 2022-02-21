@@ -4,7 +4,7 @@ import { MediaDataAttributes } from "lib/api/api"
 
 interface NextImageProps {
     media: MediaDataAttributes;
-    className: string;
+    className?: string;
 }
 const NextImage = ({ media, className }: NextImageProps) => {
   const { alternativeText, width, height } = media.attributes;
