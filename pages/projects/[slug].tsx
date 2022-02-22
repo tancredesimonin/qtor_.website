@@ -1,3 +1,4 @@
+import PasswordBlocker from "components/action/passwordBlocker";
 import BlockRenderer from "components/blocks/renderer";
 import HeaderDefault from "components/header/default";
 import PageLayout from "components/layout/pageLayout";
@@ -8,15 +9,16 @@ import { GetStaticPaths, GetStaticPathsContext, GetStaticProps, InferGetStaticPr
 import { ParsedUrlQuery } from "querystring";
 
 function PageProject({ page, global, locales }: InferGetStaticPropsType<typeof getStaticProps>) {
+  console.log('password:', page.public)
+
     return (
       <>
         <ProjectPageSeo page={page} global={global} locales={locales}/>
         <HeaderDefault page={page} locales={locales}></HeaderDefault>
         <PageLayout h1={page.name}>
-        <BlockRenderer blocks={page.blocks}/>
+          <PasswordBlocker isPublic={page.public} password={page.password}><BlockRenderer blocks={page.blocks}/></PasswordBlocker>
         </PageLayout>
       </>
-
     )
   }
 

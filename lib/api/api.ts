@@ -127,6 +127,7 @@ export interface ProjectAttributes extends DynamicPageSharedAttributes {
   name: string;
   public: boolean;
   slug: string;
+  password: string;
   localizations: {
     data: Array<{
       id: number; 
