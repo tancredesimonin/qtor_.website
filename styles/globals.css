@@ -10,6 +10,8 @@
 }
 
 /* terminal-like cursor blinking */
+/* TODO upgrade this to CSS modules: see https://nextjs.org/docs/basic-features/built-in-css-support#adding-component-level-css */
+
 .blink {
         animation: blink-animation 1.5s steps(5, start) infinite;
         -webkit-animation: blink-animation 1.5s steps(5, start) infinite;
