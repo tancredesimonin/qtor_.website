@@ -238,6 +238,7 @@ export interface SeoAttributes {
   canonicalURL: string;
   metaImage: Relation<MediaAttributes>;
   noIndex?: boolean;
+  metaViewport?: string;
 }
 
 
