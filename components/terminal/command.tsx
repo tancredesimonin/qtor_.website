@@ -53,7 +53,7 @@ export default function Terminal({commandList, typeSpeed, onCompletion, id}: Ter
 
     return (
         <div className='block'>
-            <span id={id} className="inline-block font-sans text-gray-50"></span>
+            <span id={id} className="inline-block font-sans text-primary-50"></span>
         </div>
     )
 

@@ -5,6 +5,9 @@ import { GlobalAttributes, PageSharedAttributes, SingleType } from 'lib/api/api'
 import { fetchAPI } from 'lib/api/client'
 import DefaultSeo from 'components/seo/default';
 import { ThemeProvider } from 'next-themes';
+import { DEFAULT_THEME } from 'lib/style/themes';
+import { useEffect, useState } from 'react';
+import { applyTheme } from 'lib/style/themes/utils';
 
 type AppProps<P = any> = {
   pageProps: P;
@@ -18,6 +21,14 @@ export interface PageProps {
 
 function MyApp({ Component, pageProps }: AppProps<PageProps>) {
   const { global } = pageProps;
+  const [theme, setTheme ] = useState(DEFAULT_THEME);
+
+  /**
+   * Run the applyTheme function every time the theme state changes
+   */
+  useEffect(() => {
+    applyTheme(global.seo.metaViewport!);
+  }, [global.seo.metaViewport, theme]);
   return (
     <>
       <ThemeProvider attribute="class" forcedTheme="dark">

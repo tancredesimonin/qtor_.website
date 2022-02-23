@@ -1,12 +1,15 @@
 # TODO
 
+## verification of canonical urls system
+
+[quick explanation](https://moz.com/learn/seo/canonicalization)
+## sitemap generation
+
 ## library optimization
 
 - maybe check [this one](https://github.com/jstejada/react-typist) for the typing stuff
 
-## dynamic zone feature
 
-[doc](https://strapi.io/blog/how-to-create-pages-on-the-fly-with-dynamic-zone)
 
 ## Performance
 
