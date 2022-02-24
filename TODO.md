@@ -1,5 +1,14 @@
 # TODO
 
+## search home page by website
+## SEO for home page
+
+## SEO for bio page
+
+## Dynamic favicon
+## Dynamic locales
+
+
 ## verification of canonical urls system
 
 [quick explanation](https://moz.com/learn/seo/canonicalization)

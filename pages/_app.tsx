@@ -1,7 +1,7 @@
 import 'styles/globals.css'
 import type { AppContext, AppProps as NextAppProps } from "next/app";
 import App from 'next/app'
-import { GlobalAttributes, PageSharedAttributes, SingleType } from 'lib/api/api'
+import { CollectionGetResponse, PageSharedAttributes, WebsiteAttributes } from 'lib/api/api'
 import { fetchAPI } from 'lib/api/client'
 import DefaultSeo from 'components/seo/default';
 import { ThemeProvider } from 'next-themes';
@@ -14,7 +14,7 @@ type AppProps<P = any> = {
 } & Omit<NextAppProps<P>, "pageProps">;
 
 export interface PageProps {
-  global: GlobalAttributes;
+  global: WebsiteAttributes;
   page: PageSharedAttributes;
   locale: string;
 }
@@ -26,9 +26,9 @@ function MyApp({ Component, pageProps }: AppProps<PageProps>) {
   /**
    * Run the applyTheme function every time the theme state changes
    */
-  useEffect(() => {
-    applyTheme(global.seo.metaViewport!);
-  }, [global.seo.metaViewport, theme]);
+  // useEffect(() => {
+  //   applyTheme(global.seo.metaViewport!);
+  // }, [global.seo.metaViewport, theme]);
   return (
     <>
       <ThemeProvider attribute="class" forcedTheme="dark">
@@ -39,8 +39,8 @@ function MyApp({ Component, pageProps }: AppProps<PageProps>) {
   )
 }
 
-// getInitialProps disables automatic static optimization for pages that don't
-// have getStaticProps. So article, category and home pages still get SSG.
+// getInitialProps disables automatic static optimization for pages **that don't
+// have getStaticProps**.
 // Hopefully we can replace this with getStaticProps once this issue is fixed:
 // https://github.com/vercel/next.js/discussions/10949
 MyApp.getInitialProps = async (context: AppContext) => {
@@ -48,9 +48,11 @@ MyApp.getInitialProps = async (context: AppContext) => {
   // Calls page's `getInitialProps` and fills `appProps.pageProps`
   const appProps = await App.getInitialProps(context)
   // Fetch global site settings from Strapi
-  const globalResponse: SingleType<GlobalAttributes> = await fetchAPI("/global", { locale, populate: ['*', 'seo.metaImage', 'seo.metaSocial'] });
+  const websiteConfig: CollectionGetResponse<WebsiteAttributes> = await fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['locales', 'defaultLocale', 'seo.metaImage', 'seo.metaSocial'] });
+
+  console.log(websiteConfig.data.attributes)
   // Pass the data to our page via props
-  return { ...appProps, pageProps: { global: globalResponse.data.attributes } }
+  return { ...appProps, pageProps: { global: websiteConfig.data.attributes } }
 }
 
 export default MyApp

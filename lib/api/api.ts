@@ -1,121 +1,66 @@
 /***********************************
  * 
- *             Global
+ *             Config
  * 
  ***********************************/
-
-export interface GlobalAttributes {
-  websiteTitle: string;
-  locale: string;
-  seo: SeoAttributes;
-}
-
-export interface SettingsI18nAttributes {
+ export interface SettingsI18nAttributes {
   id: number;
   name: string;
   code: string;
   isDefault: boolean;
 }
 
-
+/***********************************
+ * 
+ *             LocaleType
+ * 
+ ***********************************/
+export interface LocaleTypeAttributes {
+  shortCode: string;
+  fullCode: string;
+  label: string;
+  localizedLabel: string;
+}
 
 /***********************************
  * 
- *             Pages
+ *             Website
  * 
  ***********************************/
 
-
-/**
- * Shared
- */
-export interface SinglePageResponse<T> {
-  data: {
-    id: number;
-    attributes: T;
-    locale: string;
-  }
-}
-
-export interface SinglePageSharedAttributes {
-  locale: string;
+export interface WebsiteAttributes {
+  name: string;
+  favicon?: Relation<MediaAttributes>;
+  locales?: RelationMany<LocaleTypeAttributes>;
+  defaultLocale: Relation<LocaleTypeAttributes>;
+  domain: string;
   seo: SeoAttributes;
-  blocks?: Array<Blocks>;
 }
-
-export interface DynamicPageSharedAttributes {
-  locale: string;
-  slug: string;
-  seo?: SeoAttributes | null;
-  blocks?: Array<Blocks>;
-  localizations: {
-    data: Array<{
-      id: number; 
-      attributes: {
-        slug: string;
-        locale: string;
-    }}>;
-  }
-}
-
-export type PageSharedAttributes = Either<SinglePageSharedAttributes, DynamicPageSharedAttributes>
 
 /***********************************
  * 
- *            Single Types
+ *            Pages
  * 
  ***********************************/
 
-export interface PageHomeAttributes extends SinglePageSharedAttributes {
-  h1: string;
+export interface PageHomeAttributes extends DynamicPageSharedAttributes {
+  title: string;
 }
 
-export interface PageBioAttributes extends SinglePageSharedAttributes {
-  h1: string;
+export interface PageBioAttributes extends DynamicPageSharedAttributes {
+  title: string;
 }
 
 export interface Page404Attributes extends SinglePageSharedAttributes {
-  h1: string;
+  title: string;
   message: string;
 }
 
 export interface Page500Attributes extends SinglePageSharedAttributes {
-  h1: string;
+  title: string;
   message: string;
 }
 
-/***********************************
- * 
- *             Collections
- * 
- ***********************************/
-
- export interface CollectionGetResponse<T> {
-  data: {
-    id: number;
-    attributes: T;
-  }
-}
-
-export interface Relation<T> {
-  data: {
-    id: number;
-    attributes: T;
-  }
-}
-
-export interface RelationMany<T> {
-  data: Array<{
-    id: number;
-    attributes: T;
-  }>
-}
-
-
-export interface CollectionListResponse<T> {
-  data: Array<{id: number; attributes: T}>;
-  meta: { pagination: { page: number, pageSize: number, pageCount: number, total: number } }
-}
 
 /***********************************
  * 
@@ -123,7 +68,7 @@ export interface CollectionListResponse<T> {
  * 
  ***********************************/
 
-export interface ProjectAttributes extends DynamicPageSharedAttributes {
+export interface PageProjectAttributes extends DynamicPageSharedAttributes {
   name: string;
   public: boolean;
   slug: string;
@@ -138,6 +83,10 @@ export interface ProjectAttributes extends DynamicPageSharedAttributes {
         locale: string;
     }}>;
   }
+}
+
+export interface ProjectAttributes {
+  
 }
 
 /***********************************
@@ -281,6 +230,65 @@ export type Blocks = BlockParagraphAttributes | BlockReleaseAttributes | BlockTr
  *             Partials
  * 
  ***********************************/
+ export interface SinglePageResponse<T> {
+  data: {
+    id: number;
+    attributes: T;
+    locale: string;
+  }
+}
+
+export interface SinglePageSharedAttributes {
+  locale: string;
+  seo: SeoAttributes;
+  blocks?: Array<Blocks>;
+}
+
+export interface DynamicPageSharedAttributes {
+  locale: string;
+  slug: string;
+  seo?: SeoAttributes | null;
+  blocks?: Array<Blocks>;
+  localizations: {
+    data: Array<{
+      id: number; 
+      attributes: {
+        slug: string;
+        locale: string;
+    }}>;
+  }
+}
+
+ export interface CollectionGetResponse<T> {
+  data: {
+    id: number;
+    attributes: T;
+  }
+}
+
+export interface Relation<T> {
+  data: {
+    id: number;
+    attributes: T;
+  }
+}
+
+export interface RelationMany<T> {
+  data: Array<{
+    id: number;
+    attributes: T;
+  }>
+}
+
+
+export interface CollectionListResponse<T> {
+  data: Array<{id: number; attributes: T}>;
+  meta: { pagination: { page: number, pageSize: number, pageCount: number, total: number } }
+}
+
+
+
+export type PageSharedAttributes = Either<SinglePageSharedAttributes, DynamicPageSharedAttributes>
 
  export interface MediaAttributes {
   name: string;

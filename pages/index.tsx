@@ -2,7 +2,7 @@ import Terminal, { Command } from "components/terminal/command";
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useState } from "react";
 import LayoutDefault from "components/layout/default";
-import { GlobalAttributes, PageHomeAttributes, SinglePageResponse, SingleType } from "lib/api/api";
+import { CollectionGetResponse, PageHomeAttributes, WebsiteAttributes } from "lib/api/api";
 import { fetchAPI } from "lib/api/client";
 import { CSSTransition } from "react-transition-group";
 import HeaderDefault from "components/header/default";
@@ -77,7 +77,7 @@ function Home({
 
   return (
     <>
-      <SinglePageSeo page={page} global={global}/>
+      {/* <SinglePageSeo page={page} global={global}/> */}
       {displayTerminal && (
         <LayoutDefault>
           <Terminal
@@ -155,7 +155,7 @@ function Home({
       >
         <>
           <HeaderDefault page={page}></HeaderDefault>
-          <PageLayout h1={page.h1}>
+          <PageLayout h1={page.title}>
             <BlockRenderer blocks={page.blocks}/>
           </PageLayout>
         </>
@@ -168,12 +168,12 @@ function Home({
 
 export const getStaticProps: GetStaticProps<{
   page: PageHomeAttributes;
-  global: GlobalAttributes;
+  global: WebsiteAttributes;
 }> = async (context) => {
   const { locale } = context;
-  const [ global, pageData ] = await Promise.all<[Promise<SingleType<GlobalAttributes>>, Promise<SinglePageResponse<PageHomeAttributes>> ]>([
-    fetchAPI("/global", { locale, populate: ['*', 'seo.metaImage', 'seo.metaSocial'] }),
-    fetchAPI("/page-home", { locale, populate: ['blocks','seo.metaImage', 'seo.metaSocial'] })
+  const [ global, pageData ] = await Promise.all<[Promise<CollectionGetResponse<WebsiteAttributes>>, Promise<CollectionGetResponse<PageHomeAttributes>> ]>([
+    fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['*', 'locales', 'defaultLocale', 'seo.metaImage', 'seo.metaSocial'] }),
+    fetchAPI(`/page-homes/${process.env.WEBSITE_ID}`, { locale, populate: ['blocks','seo.metaImage', 'seo.metaSocial'] })
   ])
   return {
     props: {

@@ -1,9 +1,9 @@
-import { GlobalAttributes } from 'lib/api/api';
+import { WebsiteAttributes } from 'lib/api/api';
 import { getLocaleDetails } from 'lib/i18n';
 import { getMediaUrl } from 'lib/utils';
 import { NextSeo } from 'next-seo'; // doc: https://www.npmjs.com/package/next-seo
 
-function DefaultSeo(global: GlobalAttributes) {
+function DefaultSeo(global: WebsiteAttributes) {
     // I apologize for that absolute mess.
     const image = global.seo?.metaImage?.data?.attributes ? {
         url: getMediaUrl(global.seo.metaImage.data),
@@ -21,15 +21,15 @@ function DefaultSeo(global: GlobalAttributes) {
     
     return (
         <NextSeo
-            title={global.websiteTitle}
+            title={global.name}
             description={global.seo.metaDescription}
             openGraph={{
                 title: global.seo.metaTitle,
-                site_name: global.websiteTitle,
-                url: process.env.NEXT_PUBLIC_URL+'/'+global.locale,
+                site_name: global.name,
+                url: global.domain+'/'+global.defaultLocale.data.attributes.shortCode,
                 description: global.seo.metaDescription,
                 images: [image],
-                locale: getLocaleDetails(global.locale).i18nCode,
+                locale: getLocaleDetails(global.defaultLocale.data.attributes.shortCode).i18nCode,
             }}
             />
     )

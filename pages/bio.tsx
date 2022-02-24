@@ -1,5 +1,5 @@
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
-import { GlobalAttributes, PageBioAttributes, SinglePageResponse, SingleType } from "lib/api/api";
+import { CollectionGetResponse, PageBioAttributes, WebsiteAttributes } from "lib/api/api";
 import { fetchAPI } from "lib/api/client";
 import HeaderDefault from "components/header/default";
 import BlockRenderer from "components/blocks/renderer";
@@ -14,9 +14,9 @@ function Bio({
 
   return (
         <>
-          <SinglePageSeo page={page} global={global}/>
+          {/* <SinglePageSeo page={page} global={global}/> */}
           <HeaderDefault page={page}/>
-          <PageLayout h1={page.h1}>
+          <PageLayout h1={page.title}>
             <BlockRenderer blocks={page.blocks}/>
           </PageLayout>
         </>
@@ -25,12 +25,12 @@ function Bio({
 
 export const getStaticProps: GetStaticProps<{
   page: PageBioAttributes;
-  global: GlobalAttributes;
+  global: WebsiteAttributes;
 }> = async (context) => {
   const { locale } = context;
-  const [ global, pageData ] = await Promise.all<[Promise<SingleType<GlobalAttributes>>, Promise<SinglePageResponse<PageBioAttributes>> ]>([
-    fetchAPI("/global", { locale, populate: ['*', 'seo.metaImage', 'seo.metaSocial'] }),
-    fetchAPI("/page-bio", { locale, populate: ['blocks','seo.metaImage', 'seo.metaSocial'] })
+  const [ global, pageData ] = await Promise.all<[Promise<CollectionGetResponse<WebsiteAttributes>>, Promise<CollectionGetResponse<PageBioAttributes>> ]>([
+    fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['locales', 'defaultLocale', 'seo.metaImage', 'seo.metaSocial'] }),
+    fetchAPI(`/bios/${process.env.WEBSITE_ID}`, { locale, populate: ['blocks','seo.metaImage', 'seo.metaSocial'] })
   ])
   return {
     props: {
