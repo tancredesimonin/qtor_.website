@@ -6,7 +6,7 @@ interface BlockParagraphProps {
     block: BlockParagraphAttributes
 }
 
-export default function BlockParagraph( block: BlockParagraphAttributes) {
+export default function BlockParagraph({ block }: BlockParagraphProps) {
   return (
     <div className="relative">
       <div className="max-w-3xl mx-auto text-lg">

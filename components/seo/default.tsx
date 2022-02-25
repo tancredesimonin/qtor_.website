@@ -5,7 +5,7 @@ import { NextSeo } from 'next-seo'; // doc: https://www.npmjs.com/package/next-s
 
 function DefaultSeo(global: WebsiteAttributes) {
     // I apologize for that absolute mess.
-    const image = global.seo?.metaImage?.data?.attributes ? {
+    const image = global.seo?.metaImage.data?.attributes ? {
         url: getMediaUrl(global.seo.metaImage.data),
         alt: global.seo.metaImage.data.attributes.alternativeText,
         type: global.seo.metaImage.data.attributes.mime,
@@ -26,10 +26,10 @@ function DefaultSeo(global: WebsiteAttributes) {
             openGraph={{
                 title: global.seo.metaTitle,
                 site_name: global.name,
-                url: global.domain+'/'+global.defaultLocale.data.attributes.shortCode,
+                url: global.domain+'/'+(global.defaultLocale.data?.attributes.shortCode ? global.defaultLocale.data.attributes.shortCode : ''),
                 description: global.seo.metaDescription,
                 images: [image],
-                locale: getLocaleDetails(global.defaultLocale.data.attributes.shortCode).i18nCode,
+                locale: getLocaleDetails((global.defaultLocale.data?.attributes.shortCode ? global.defaultLocale.data.attributes.shortCode : '')).i18nCode,
             }}
             />
     )

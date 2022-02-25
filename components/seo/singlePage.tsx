@@ -29,13 +29,13 @@ function SinglePageSeo({ page, global }: {page: SinglePageSharedAttributes, glob
                 site_name: global.name,
                 url: process.env.NEXT_PUBLIC_URL+'/'+page.locale+page.seo.canonicalURL,
                 description: page.seo.metaDescription,
-                images: [{
-                    url: getMediaUrl(page.seo.metaImage.data),
-                    alt: page.seo.metaImage.data.attributes.alternativeText,
-                    type: page.seo.metaImage.data.attributes.mime,
-                    width: page.seo.metaImage.data.attributes.width,
-                    height: page.seo.metaImage.data.attributes.height,
-                }],
+                // images: [{
+                //     url: getMediaUrl(page.seo.metaImage.data),
+                //     alt: page.seo.metaImage.data.attributes.alternativeText,
+                //     type: page.seo.metaImage.data.attributes.mime,
+                //     width: page.seo.metaImage.data.attributes.width,
+                //     height: page.seo.metaImage.data.attributes.height,
+                // }],
                 locale: getLocaleDetails(page.locale).i18nCode,
             }}
             />

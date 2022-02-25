@@ -5,15 +5,17 @@ import { BlockTrackAttributes } from "lib/api/api";
 import { getReadableDuration } from "lib/calculators";
 
 export default function BlockTrack(block: BlockTrackAttributes) {
-  console.log(block.track.data.attributes.genres)
-  return (
+  if (!block.track.data?.attributes) {
+    return null
+  }
+  else return (
     <div className="relative">
       <div className="grid max-w-3xl grid-cols-12 py-6 mx-auto sm:py-10">
-        {block.track.data.attributes.release?.data.attributes.cover && 
+        {(block.track.data?.attributes.release.data?.attributes.cover?.data?.attributes) && 
         <div className="col-span-3 md:col-span-3">
           <div className="object-cover object-center rounded-md w-22 h-22 sm:w-48 sm:h-48">
           <NextImage 
-          media={block.track.data.attributes.release?.data.attributes.cover.data}
+          media={block.track.data.attributes.release.data.attributes.cover.data}
           />
           </div>
         </div>}
@@ -29,7 +31,7 @@ export default function BlockTrack(block: BlockTrackAttributes) {
                 <h4 className="text-base">
                   {/* TODO implements link to /artist page */}
                   <a href={''} className="font-medium dark:text-gray-400 dark:hover:text-gray-300">
-                    {block.track.data.attributes.artist?.data.attributes.name}
+                    {block.track.data.attributes.artist.data?.attributes.name}
                   </a>
                 </h4>
               </div>

@@ -1,10 +1,10 @@
 import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
-import { PageSharedAttributes, SettingsI18nAttributes } from "lib/api/api";
-import { getOtherLocaleDetails } from "lib/i18n";
-import { capitalize, classNames } from "lib/style/styles";
+import { DataItem, LocaleTypeAttributes, PageSharedAttributes, SettingsI18nAttributes } from "lib/api/api";
+import { classNames } from "lib/style/styles";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import LocaleSwitch from "./locale-switch";
 
 const navigation = [
   { name: "Manifesto", path: "/", current: true },
@@ -12,7 +12,7 @@ const navigation = [
 ];
 interface HeaderDefaultProps {
   page: PageSharedAttributes;
-  locales?: Array<SettingsI18nAttributes>;
+  locales: Array<DataItem<LocaleTypeAttributes>>;
 }
 
 export default function HeaderDefault({ page, locales }: HeaderDefaultProps) {
@@ -62,14 +62,7 @@ export default function HeaderDefault({ page, locales }: HeaderDefaultProps) {
                     </div>
                     <div className="hidden md:block">
                       <div className="flex items-center ml-4 md:ml-6">
-                        <Link
-                          href={page.slug ? { href: router.pathname, query: { slug: page.localizations.data[0].attributes.slug } } : { href: router.pathname }}
-                          locale={getOtherLocaleDetails(page.locale).shortCode}
-                        >
-                          <a className="px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white">
-                            {capitalize(getOtherLocaleDetails(page.locale).localizedLabel)}
-                          </a>
-                        </Link>
+                        <LocaleSwitch page={page} locales={locales} pathname={router.pathname}/>
 
                         {/* <button
                             type="button"
@@ -180,7 +173,7 @@ export default function HeaderDefault({ page, locales }: HeaderDefaultProps) {
                       </button>
                     </div> */}
                   <div className="px-2 mt-3 space-y-1">
-                    <Link
+                    {/* <Link
                       href={page.slug ? { href: router.pathname, query: { slug: page.localizations.data[0].attributes.slug } } : { href: router.pathname }}
                       locale={getOtherLocaleDetails(page.locale).shortCode}
                       passHref
@@ -191,7 +184,7 @@ export default function HeaderDefault({ page, locales }: HeaderDefaultProps) {
                       >
                         {capitalize(getOtherLocaleDetails(page.locale).localizedLabel)}
                       </Disclosure.Button>
-                    </Link>
+                    </Link> */}
                   </div>
                 </div>
               </Disclosure.Panel>

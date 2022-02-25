@@ -2,12 +2,12 @@ import Terminal, { Command } from "components/terminal/command";
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useState } from "react";
 import LayoutDefault from "components/layout/default";
-import { CollectionGetResponse, PageHomeAttributes, WebsiteAttributes } from "lib/api/api";
+import { CollectionGetResponse, DataItem, LocaleTypeAttributes, PageHomeAttributes, WebsiteAttributes } from "lib/api/api";
 import { fetchAPI } from "lib/api/client";
 import { CSSTransition } from "react-transition-group";
 import HeaderDefault from "components/header/default";
 import { useRouter } from "next/router";
-import { getLocaleDetails } from "lib/i18n";
+import { getAvailableLocalesStringList, getAvailableLocalesTypeList, getLocaleDetails } from "lib/i18n";
 import BlockRenderer from "components/blocks/renderer";
 import PageLayout from "components/layout/pageLayout";
 import SinglePageSeo from "components/seo/singlePage";
@@ -17,7 +17,8 @@ const ANIMATION_TIME_MS = 100;
 
 function Home({
   page,
-  global
+  global,
+  locales
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const firstCommands: Array<Command> = [
     {
@@ -155,7 +156,7 @@ function Home({
         }}
       >
         <>
-          <HeaderDefault page={page}></HeaderDefault>
+          <HeaderDefault page={page} locales={locales}></HeaderDefault>
           <PageLayout h1={page.title}>
             <BlockRenderer blocks={page.blocks}/>
           </PageLayout>
@@ -170,15 +171,25 @@ function Home({
 export const getStaticProps: GetStaticProps<{
   page: PageHomeAttributes;
   global: WebsiteAttributes;
+  locales: Array<DataItem<LocaleTypeAttributes>>;
 }> = async (context) => {
   const { locale } = context;
   const global: CollectionGetResponse<WebsiteAttributes> = await fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['*', 'locales', 'defaultLocale', 'pageHome', ...populate.seo] })
-  const pageData: CollectionGetResponse<PageHomeAttributes> = await fetchAPI(`/page-homes/${global.data.attributes.pageHome.data.id}`, { locale, populate: [...populate.seo, ...populate.blocks] })
+  if (!global.data.attributes.locales?.data) {
+    throw Error('missing locales list in website.locales')
+  }
+  if (!global.data.attributes.pageHome.data?.attributes) {
+    throw Error('missing pageHome in website.pageHome')
+  }
+  const pageData: CollectionGetResponse<PageHomeAttributes> = await fetchAPI(`/page-homes/${global.data.attributes.pageHome.data.id}`, { locale, populate: ['localizations', ...populate.seo, ...populate.blocks] })
+
   return {
     props: {
       page: pageData.data.attributes,
       global: global.data.attributes,
-      locale
+      locale,
+      locales: getAvailableLocalesTypeList(pageData.data.attributes, global.data.attributes.locales.data),
+
     },
   };
 };

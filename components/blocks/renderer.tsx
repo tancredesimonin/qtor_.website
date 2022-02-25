@@ -14,7 +14,7 @@ export default function BlockRenderer({blocks}: BlockRendererProps ) {
       {blocks?.map((block) => {
         switch (block.__component) {
           case 'blocks.paragraph':
-            return <BlockParagraph {...block} key={block.id} />
+            return <BlockParagraph block={block} key={block.id} />
           case 'blocks.release':
             return <BlockRelease {...block} key={block.id} />
             case 'blocks.track':

@@ -95,15 +95,16 @@ export interface ProjectAttributes extends DynamicPageSharedAttributes {
   public: boolean;
   slug: string;
   password: string;
+  locale: string;
   localizations: {
-    data: Array<{
+    data: Array<Either<{
       id: number; 
       attributes: {
         name: string;
         public: boolean;
         slug: string;
         locale: string;
-    }}>;
+    }},  null>>;
   }
 }
 
@@ -154,11 +155,11 @@ export interface ArtistAttributes {
   releaseDate: string;
   bpm: number;
   duration: number;
-  release?: Relation<ReleaseAttributes>;
+  release: Relation<ReleaseAttributes>;
   releasePosition?: number;
-  artist?: Relation<ArtistAttributes>;
-  genres?: RelationMany<GenreAttributes>;
-  contributors?: RelationMany<ArtistAttributes>;
+  artist: Relation<ArtistAttributes>;
+  genres: RelationMany<GenreAttributes>;
+  contributors: RelationMany<ArtistAttributes>;
   file?: Relation<MediaAttributes>;
 }
 
@@ -263,47 +264,45 @@ export interface SinglePageSharedAttributes {
   locale: string;
   seo: SeoAttributes;
   blocks?: Array<Blocks>;
+  localizations: {
+    data: Array<Either<{
+      id: number; 
+      attributes: {
+        locale: string;
+    }},null>>;
+  }
 }
 
 export interface DynamicPageSharedAttributes {
   locale: string;
   slug: string;
-  seo?: SeoAttributes | null;
+  seo: SeoAttributes | null;
   blocks?: Array<Blocks>;
   localizations: {
-    data: Array<{
+    data: Array<Either<{
       id: number; 
       attributes: {
         slug: string;
         locale: string;
-    }}>;
+    }},null>>;
   }
 }
 
  export interface CollectionGetResponse<T> {
-  data: {
-    id: number;
-    attributes: T;
-  }
+  data: DataItem<T>;
 }
 
 export interface Relation<T> {
-  data: {
-    id: number;
-    attributes: T;
-  }
+  data?: DataItem<T>;
 }
 
 export interface RelationMany<T> {
-  data: Array<{
-    id: number;
-    attributes: T;
-  }>
+  data: Array<DataItem<T>>
 }
 
 
 export interface CollectionListResponse<T> {
-  data: Array<{id: number; attributes: T}>;
+  data: Array<DataItem<T>>;
   meta: { pagination: { page: number, pageSize: number, pageCount: number, total: number } }
 }
 
@@ -332,10 +331,12 @@ export interface MediaDataAttributes {
 
 
 export interface SingleType<T> {
-  data: {
-    id: number;
-    attributes: T;
-  }
+  data: DataItem<T>
+}
+
+export interface DataItem<T> {
+  id: number;
+  attributes: T
 }
 
 export type Only<T, U> = {   [P in keyof T]: T[P] } & Omit<{   [P in keyof U]?: never }, keyof T>;

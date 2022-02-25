@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { createRef, MouseEvent, useState } from "react"
 
 export declare interface PasswordBlockerProps {
