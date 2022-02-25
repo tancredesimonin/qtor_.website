@@ -3,6 +3,7 @@ import LayoutDefault from "components/layout/default";
 import SinglePageSeo from "components/seo/singlePage";
 import { CollectionGetResponse, Page404Attributes, SinglePageResponse, WebsiteAttributes } from "lib/api/api";
 import { fetchAPI } from "lib/api/client";
+import { populate } from "lib/api/utils";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 function Page404({ page, global }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -26,8 +27,8 @@ function Page404({ page, global }: InferGetStaticPropsType<typeof getStaticProps
   }> = async (context) => {
     const { locale } = context;
     const [ global, pageData ] = await Promise.all<[Promise<CollectionGetResponse<WebsiteAttributes>>, Promise<SinglePageResponse<Page404Attributes>> ]>([
-      fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['locales', 'defaultLocale', 'seo.metaImage', 'seo.metaSocial'] }),
-      fetchAPI("/page404", { locale, populate: ['*','seo.metaImage', 'seo.metaSocial'] })
+      fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['locales', 'defaultLocale', ...populate.seo] }),
+      fetchAPI("/page404", { locale, populate: [...populate.seo] })
     ])
     return {
       props: {

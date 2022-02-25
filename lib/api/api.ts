@@ -35,6 +35,9 @@ export interface WebsiteAttributes {
   defaultLocale: Relation<LocaleTypeAttributes>;
   domain: string;
   seo: SeoAttributes;
+  type: 'artist' | 'label';
+  artist: Relation<ArtistAttributes>;
+  pageHome: Relation<PageHomeAttributes>;
 }
 
 /***********************************
@@ -45,10 +48,12 @@ export interface WebsiteAttributes {
 
 export interface PageHomeAttributes extends DynamicPageSharedAttributes {
   title: string;
+  website?: Relation<WebsiteAttributes>;
 }
 
-export interface PageBioAttributes extends DynamicPageSharedAttributes {
+export interface BioAttributes extends DynamicPageSharedAttributes {
   title: string;
+  artist: Relation<ArtistAttributes>;
 }
 
 export interface Page404Attributes extends SinglePageSharedAttributes {
@@ -85,8 +90,21 @@ export interface PageProjectAttributes extends DynamicPageSharedAttributes {
   }
 }
 
-export interface ProjectAttributes {
-  
+export interface ProjectAttributes extends DynamicPageSharedAttributes {
+  name: string;
+  public: boolean;
+  slug: string;
+  password: string;
+  localizations: {
+    data: Array<{
+      id: number; 
+      attributes: {
+        name: string;
+        public: boolean;
+        slug: string;
+        locale: string;
+    }}>;
+  }
 }
 
 /***********************************
@@ -120,6 +138,9 @@ export interface ArtistAttributes {
   releases?: RelationMany<ReleaseAttributes>;
   contributions?: RelationMany<TrackAttributes>;
   presence?: RelationMany<ReleaseAttributes>;
+  bio?: Relation<BioAttributes>;
+  website?: Relation<WebsiteAttributes>;
+  projects?: RelationMany<ProjectAttributes>;
 }
 
 /***********************************

@@ -8,6 +8,7 @@ import { ThemeProvider } from 'next-themes';
 import { DEFAULT_THEME } from 'lib/style/themes';
 import { useEffect, useState } from 'react';
 import { applyTheme } from 'lib/style/themes/utils';
+import { populate } from 'lib/api/utils';
 
 type AppProps<P = any> = {
   pageProps: P;
@@ -48,9 +49,8 @@ MyApp.getInitialProps = async (context: AppContext) => {
   // Calls page's `getInitialProps` and fills `appProps.pageProps`
   const appProps = await App.getInitialProps(context)
   // Fetch global site settings from Strapi
-  const websiteConfig: CollectionGetResponse<WebsiteAttributes> = await fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['locales', 'defaultLocale', 'seo.metaImage', 'seo.metaSocial'] });
+  const websiteConfig: CollectionGetResponse<WebsiteAttributes> = await fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['locales', 'defaultLocale', ...populate.seo] });
 
-  console.log(websiteConfig.data.attributes)
   // Pass the data to our page via props
   return { ...appProps, pageProps: { global: websiteConfig.data.attributes } }
 }

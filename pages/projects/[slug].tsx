@@ -3,8 +3,9 @@ import BlockRenderer from "components/blocks/renderer";
 import HeaderDefault from "components/header/default";
 import PageLayout from "components/layout/pageLayout";
 import ProjectPageSeo from "components/seo/projects";
-import { CollectionGetResponse, CollectionListResponse, PageProjectAttributes, SettingsI18nAttributes, SingleType, WebsiteAttributes } from "lib/api/api";
+import { CollectionGetResponse, CollectionListResponse, PageProjectAttributes, ProjectAttributes, SettingsI18nAttributes, SingleType, WebsiteAttributes } from "lib/api/api";
 import { fetchAPI } from "lib/api/client";
+import { populate } from "lib/api/utils";
 import { GetStaticPaths, GetStaticPathsContext, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ParsedUrlQuery } from "querystring";
 
@@ -27,19 +28,23 @@ function PageProject({ page, global, locales }: InferGetStaticPropsType<typeof g
     slug: string;
   }
   export const getStaticPaths: GetStaticPaths<ContextParams> = async ({ locales }: GetStaticPathsContext) => {
+    const global: CollectionGetResponse<WebsiteAttributes> = await fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale: 'all', populate: ['*', 'locales', 'defaultLocale', 'artist.projects', ...populate.seo] })
+    
+    let paths: Array<{ params: ContextParams; locale: string; }> = [];
+    if (global.data.attributes.artist.data.attributes.projects?.data) {
     /**
      * populate * is required to return `seo`, `blocks`, `localizations` properties.
      */
-    const projects: CollectionListResponse<PageProjectAttributes> = await fetchAPI('/projects', { populate: '*', locale: 'all'})
-    let paths: Array<{ params: ContextParams; locale: string; }> = [];
-    projects.data.forEach((project) => {
-            paths.push({
-                params: {
-                    slug: project.attributes.slug,
-                  },
-                  locale: project.attributes.locale,
-            })
-    })
+     global.data.attributes.artist.data.attributes.projects.data.forEach((project) => {
+             paths.push({
+                 params: {
+                     slug: project.attributes.slug,
+                   },
+                   locale: project.attributes.locale,
+             })
+     })
+    }
+
     return {
       paths,
       fallback: false,
@@ -55,11 +60,13 @@ function PageProject({ page, global, locales }: InferGetStaticPropsType<typeof g
   }, ContextParams> = async (context) => {
     const { locale } = context;
     const { slug } = context.params!;
-    const [ locales, global, projectData ] = await Promise.all<[Promise<Array<SettingsI18nAttributes>>, Promise<CollectionGetResponse<WebsiteAttributes>>, Promise<CollectionListResponse<PageProjectAttributes>> ]>([
+    console.log('slug:', slug)
+    const [ locales, global ] = await Promise.all<[Promise<Array<SettingsI18nAttributes>>, Promise<CollectionGetResponse<WebsiteAttributes>> ]>([
       fetchAPI('/i18n/locales'),
-      fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['locales', 'defaultLocale', 'seo.metaImage', 'seo.metaSocial'] }),
-      fetchAPI('/projects', { slug, locale, populate: ['*', 'localizations', 'seo.metaImage', 'seo.metaSocial', 'blocks.track.file', 'blocks.track.release.cover', 'blocks.track.artist', 'blocks.track.genres' ] })
+      fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['locales', 'defaultLocale', ...populate.seo] }),
     ])
+    const projectData: CollectionListResponse<ProjectAttributes> = await fetchAPI(`/projects`, { slug, locale, populate: ['localizations', ...populate.seo, ...populate.blocks ] })
+
     return {
       props: {
         page: projectData.data[0].attributes,

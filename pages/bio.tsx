@@ -1,10 +1,11 @@
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
-import { CollectionGetResponse, PageBioAttributes, WebsiteAttributes } from "lib/api/api";
+import { CollectionGetResponse, BioAttributes, WebsiteAttributes } from "lib/api/api";
 import { fetchAPI } from "lib/api/client";
 import HeaderDefault from "components/header/default";
 import BlockRenderer from "components/blocks/renderer";
 import PageLayout from "components/layout/pageLayout";
 import SinglePageSeo from "components/seo/singlePage";
+import { populate } from "lib/api/utils";
 
 
 function Bio({
@@ -24,14 +25,12 @@ function Bio({
 }
 
 export const getStaticProps: GetStaticProps<{
-  page: PageBioAttributes;
+  page: BioAttributes;
   global: WebsiteAttributes;
 }> = async (context) => {
   const { locale } = context;
-  const [ global, pageData ] = await Promise.all<[Promise<CollectionGetResponse<WebsiteAttributes>>, Promise<CollectionGetResponse<PageBioAttributes>> ]>([
-    fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['locales', 'defaultLocale', 'seo.metaImage', 'seo.metaSocial'] }),
-    fetchAPI(`/bios/${process.env.WEBSITE_ID}`, { locale, populate: ['blocks','seo.metaImage', 'seo.metaSocial'] })
-  ])
+  const global: CollectionGetResponse<WebsiteAttributes> = await fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['*', 'locales', 'defaultLocale', 'artist', ...populate.seo] })
+  const pageData: CollectionGetResponse<BioAttributes> = await fetchAPI(`/bios/${global.data.attributes.artist?.data.id}`, { locale, populate: ['blocks', ...populate.seo] })
   return {
     props: {
       page: pageData.data.attributes,

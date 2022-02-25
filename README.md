@@ -1,8 +1,10 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-
 ## 💎 Features
 
+
+
+## 📆 Product Roadmap
+
+[Trello Roadmap here](https://trello.com/b/a4gmejWr/%F0%9F%93%BC-cassette-roadmap)
 ## 👩‍💻 Developer Experience
 
 - Type checking with [TypeScript](https://www.typescriptlang.org)

@@ -11,6 +11,7 @@ import { getLocaleDetails } from "lib/i18n";
 import BlockRenderer from "components/blocks/renderer";
 import PageLayout from "components/layout/pageLayout";
 import SinglePageSeo from "components/seo/singlePage";
+import { populate } from "lib/api/utils";
 
 const ANIMATION_TIME_MS = 100;
 
@@ -171,10 +172,8 @@ export const getStaticProps: GetStaticProps<{
   global: WebsiteAttributes;
 }> = async (context) => {
   const { locale } = context;
-  const [ global, pageData ] = await Promise.all<[Promise<CollectionGetResponse<WebsiteAttributes>>, Promise<CollectionGetResponse<PageHomeAttributes>> ]>([
-    fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['*', 'locales', 'defaultLocale', 'seo.metaImage', 'seo.metaSocial'] }),
-    fetchAPI(`/page-homes/${process.env.WEBSITE_ID}`, { locale, populate: ['blocks','seo.metaImage', 'seo.metaSocial'] })
-  ])
+  const global: CollectionGetResponse<WebsiteAttributes> = await fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['*', 'locales', 'defaultLocale', 'pageHome', ...populate.seo] })
+  const pageData: CollectionGetResponse<PageHomeAttributes> = await fetchAPI(`/page-homes/${global.data.attributes.pageHome.data.id}`, { locale, populate: [...populate.seo, ...populate.blocks] })
   return {
     props: {
       page: pageData.data.attributes,

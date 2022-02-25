@@ -3,6 +3,7 @@ import LayoutDefault from "components/layout/default";
 import SinglePageSeo from "components/seo/singlePage";
 import { CollectionGetResponse, Page500Attributes, SinglePageResponse, WebsiteAttributes } from "lib/api/api";
 import { fetchAPI } from "lib/api/client";
+import { populate } from "lib/api/utils";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 function Page500({ page, global }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -25,10 +26,9 @@ function Page500({ page, global }: InferGetStaticPropsType<typeof getStaticProps
     global: WebsiteAttributes;
   }> = async (context) => {
     const { locale } = context;
-    console.log('locale:', locale)
     const [ global, pageData ] = await Promise.all<[Promise<CollectionGetResponse<WebsiteAttributes>>, Promise<SinglePageResponse<Page500Attributes>> ]>([
-      fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['locales', 'defaultLocale', 'seo.metaImage', 'seo.metaSocial'] }),
-      fetchAPI("/page500", { locale, populate: ['*','seo.metaImage', 'seo.metaSocial'] })
+      fetchAPI(`/websites/${process.env.WEBSITE_ID}`, { locale, populate: ['locales', 'defaultLocale', ...populate.seo] }),
+      fetchAPI("/page500", { locale, populate: [...populate.seo] })
     ])
     return {
       props: {
